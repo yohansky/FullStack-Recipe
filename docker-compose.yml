@@ -1,0 +1,42 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./backend.dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+    working_dir: /app
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: blanja
+    volumes:
+      - .dbdata:/var/lib/postgresql
+    ports:
+      - "5437:5432"
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./frontend.dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    depends_on:
+      - backend
