@@ -25,6 +25,14 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
+	var existinguser models.User
+	if err := config.DB.Where("email = ?", data["Email"]).First(&existinguser).Error; err == nil {
+		c.Status(400)
+		return c.JSON(fiber.Map{
+			"Message": "Email already in use",
+		})
+	}
+
 	user := models.User{
 		Name:  data["Name"],
 		Email: data["Email"],
@@ -35,7 +43,10 @@ func Register(c *fiber.Ctx) error {
 
 	config.DB.Create(&user)
 
-	return c.JSON(user)
+	return c.JSON(fiber.Map{
+		"Message": "User Created",
+		"Data":    user,
+	})
 }
 
 func Login(c *fiber.Ctx) error {
