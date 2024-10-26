@@ -30,4 +30,5 @@ func Router(app *fiber.App) {
 	app.Post("/recipes", controllers.CreateRecipe)
 	app.Put("/recipe/:id", controllers.UpdatePhotoRecipe)
 	app.Delete("/recipe/:id", controllers.DeleteRecipe)
+	app.Get("/recipes/user/:id", controllers.GetRecipesByUserId)
 }

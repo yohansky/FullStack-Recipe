@@ -177,3 +177,16 @@ func DeleteRecipe(c *fiber.Ctx) error {
 		"Message": "Delete Complete",
 	})
 }
+
+func GetRecipesByUserId(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	var recipe []models.Recipe
+	if err := config.DB.Where("user_id = ?", id).Find(&recipe).Error; err != nil {
+		return c.JSON(fiber.Map{
+			"Error": "User nor found",
+		})
+	}
+
+	return c.JSON(recipe)
+}
